@@ -17,8 +17,6 @@ def bidstatus(status_code):
 
 
 response = api.get_bids()
-import ipdb
-ipdb.set_trace()
 
 t = PrettyTable()
 t.field_names = ["AuctionId", "ActualBidAmount", "RequestedBidAmount",
