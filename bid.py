@@ -4,36 +4,18 @@ import json
 from bondoraapi import api
 from prettytable import PrettyTable
 
-#
-# Docs:
-# https://api.bondora.com/Intro
-#
 if not len(sys.argv) == 2:
     print "provide AuctionId as the first and only argument"
     sys.exit(1)
 
 auction_id = sys.argv[1]
-bid = '''
-{{
-    "Bids": 
-        [ 
-            {{
-                "AuctionId": "{auction_id}", 
-                "Amount": 5.0, 
-                "MinAmount": 5.0 
-            }}
-        ]
-}}
 
-'''
-
-bid = json.loads(bid.format(auction_id=auction_id))
-
-bid_result = api.make_bid(bid)
+bid_result = api.make_bid(auction_id)
 if not bid_result:
     print "Bid failed"
-print "Bid successfull"
 
+print "Bid successfull"
+# result is a list, we only care about the first element
 bid_result = bid_result[0]
 
 t = PrettyTable()

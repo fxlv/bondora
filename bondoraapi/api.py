@@ -18,8 +18,23 @@ def make_post_request(request_url, content):
     return requests.post(full_url, headers=headers, data=json.dumps(content))
 
 
-def make_bid(bid):
+def make_bid(auction_id):
     url = "/api/v1/bid"
+    # Create a bid JSON payload
+    bid = '''
+    {{
+        "Bids": 
+            [ 
+                {{
+                    "AuctionId": "{auction_id}", 
+                    "Amount": 5.0, 
+                    "MinAmount": 5.0 
+                }}
+            ]
+    }}
+
+    '''
+    bid = json.loads(bid.format(auction_id=auction_id))
     response = make_post_request(url, bid)
     if response.status_code == 202:
         response_json = response.json()
