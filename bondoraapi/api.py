@@ -2,7 +2,6 @@ import sys
 import requests
 import account
 import json
-import ipdb
 
 #
 # Docs:
@@ -12,9 +11,11 @@ import ipdb
 bondora_base_url = "https://api.bondora.com"
 token = account.get_token()
 
+
 def make_post_request(request_url, content):
     full_url = "{}/{}".format(bondora_base_url, request_url)
-    headers ={"Authorization":"Bearer {}".format(token), "Content-Type":"application/json"}
+    headers = {"Authorization": "Bearer {}".format(token),
+               "Content-Type": "application/json"}
     return requests.post(full_url, headers=headers, data=json.dumps(content))
 
 
@@ -23,17 +24,18 @@ def make_bid(auction_id):
     # Create a bid JSON payload
     bid = '''
     {{
-        "Bids": 
-            [ 
+        "Bids":
+            [
                 {{
-                    "AuctionId": "{auction_id}", 
-                    "Amount": 5.0, 
-                    "MinAmount": 5.0 
+                    "AuctionId": "{auction_id}",
+                    "Amount": 5.0,
+                    "MinAmount": 5.0
                 }}
             ]
     }}
 
     '''
+
     bid = json.loads(bid.format(auction_id=auction_id))
     response = make_post_request(url, bid)
     if response.status_code == 202:
@@ -54,7 +56,7 @@ def make_get_request(request_url):
 
     response = requests.get(full_url, headers=headers)
 
-    # Handle bad responses. Sort of. 
+    # Handle bad responses. Sort of.
     if not response.ok:
         print "Bad response"
         print response.json()
@@ -70,7 +72,6 @@ def make_get_request(request_url):
     return response_json['Payload']
 
 
-
 def get_balance():
     url = "/api/v1/account/balance"
     return make_get_request(url)
@@ -84,5 +85,3 @@ def get_auctions():
 def get_bids():
     url = "/api/v1/bids"
     return make_get_request(url)
-
-

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import os
 import sys
 import requests
 import account
@@ -13,7 +12,7 @@ url = "https://api.bondora.com/api/v1/account/investments"
 
 token = account.get_token()
 
-headers ={ "Authorization":"Bearer {}".format(token)} 
+headers = {"Authorization": "Bearer {}".format(token)}
 
 response = requests.get(url, headers=headers)
 
@@ -28,6 +27,5 @@ if not response_json['Success']:
     sys.exit(1)
 
 payload = response_json['Payload']
-
 
 print response_json
