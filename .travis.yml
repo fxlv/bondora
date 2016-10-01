@@ -1,0 +1,11 @@
+---
+language: python
+
+os:
+  - linux
+
+before_script:
+  - sudo pip install flake8
+script:
+  - flake8 *.py
+  - flake8 bondoraapi/*.py
