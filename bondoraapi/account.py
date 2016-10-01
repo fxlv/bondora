@@ -27,3 +27,11 @@ def load():
 
 def get_token():
     return load()["token"]
+
+
+def get_accepted_loan_ratings():
+    conf = load()
+    if "accepted_loan_ratings" in conf:
+        return conf["accepted_loan_ratings"]
+    else:
+        return ["AA", "A"]
