@@ -1,5 +1,7 @@
 # bondora
 
+[![Build Status](https://travis-ci.org/fxlv/bondora.svg?branch=master)](https://travis-ci.org/fxlv/bondora)
+
 For whatever reason Bondora really seems to be limiting what is possible via the web page.
 Some investments never even show up on the web page.
 
