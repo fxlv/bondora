@@ -19,7 +19,7 @@ def make_post_request(request_url, content):
     return requests.post(full_url, headers=headers, data=json.dumps(content))
 
 
-def make_bid(auction_id):
+def make_bid(auction_id, bid_amount=None):
     url = "/api/v1/bid"
     # Create a bid JSON payload
     bid = '''
