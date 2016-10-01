@@ -89,7 +89,9 @@ def make_bid(auction_id):
 
 
 def show_balance():
-    print_table(["Balance", "Reserved", "BidRequestAmount", "TotalAvailable"], api.get_balance())
+    print_table(
+        ["Balance", "Reserved", "BidRequestAmount", "TotalAvailable"
+         ], api.get_balance())
 
 
 if __name__ == "__main__":
