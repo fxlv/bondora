@@ -9,6 +9,7 @@
 # Safety not guaranteed
 # Kaspars Mickevics <kaspars@fx.lv>
 #
+import sys
 import argparse
 from prettytable import PrettyTable
 from bondoraapi import account, api
@@ -17,7 +18,7 @@ from bondoraapi import account, api
 def parse_args():
     parser = argparse.ArgumentParser(description="BondoraPy")
     parser.add_argument('-a', action='store_true', help='Show auctions')
-    parser.add_argument('-b', action='store_true', help='Make a bid')
+    parser.add_argument('-b', metavar="AuctionId", help='Make a bid')
     parser.add_argument('--balance', action='store_true', help='Show balance')
     return parser, parser.parse_args()
 
@@ -27,11 +28,19 @@ def main():
     if args.a:
         show_auctions()
     elif args.b:
-        print "Make a bid"
+        make_bid(args.b)
     elif args.balance:
-        print "Show balance"
+        show_balance()
     else:
         parser.print_help()
+
+
+def auction_exists(auction_id):
+    """Return True if such auction exists"""
+    for auction in api.get_auctions():
+        if auction["AuctionId"] == auction_id:
+            return True
+    return False
 
 
 def show_auctions():
@@ -45,7 +54,7 @@ def show_auctions():
     for item in payload:
         if item["Rating"] in accepted_loan_ratings:
             # cross check each auction against my bids
-            item["BidExists"] = False # assume bid does not exists by default
+            item["BidExists"] = False  # assume bid does not exists by default
             for bid in my_bids:
                 if item["AuctionId"] == bid["AuctionId"]:
                     item["BidExists"] = True
@@ -60,6 +69,8 @@ def print_table(header, rows):
     """Print a pretty table from a set of keys and data"""
     table = PrettyTable()
     table.field_names = header
+    if type(rows) is not list:
+        rows = [rows]  # there can also be a single row
     for row in rows:
         row_content = []
         for key in header:
@@ -68,12 +79,17 @@ def print_table(header, rows):
     print table
 
 
-def make_bid():
-    pass
+def make_bid(auction_id):
+    if auction_exists(auction_id):
+        api.make_bid(auction_id)
+    else:
+        print "Such auction does not seem to exist"
+        print "AuctionId: {}".format(auction_id)
+        sys.exit(1)
 
 
 def show_balance():
-    pass
+    print_table(["Balance", "Reserved", "BidRequestAmount", "TotalAvailable"], api.get_balance())
 
 
 if __name__ == "__main__":
