@@ -97,6 +97,10 @@ def get_auctions():
     url = "/api/v1/auctions"
     return make_get_request(url)
 
+def get_auction(auction_id):
+    url = "/api/v1/auction/{auction_id}".format(auction_id=auction_id)
+    return make_get_request(url)
+
 
 def get_bids():
     url = "/api/v1/bids"
