@@ -35,3 +35,19 @@ def get_accepted_loan_ratings():
         return conf["accepted_loan_ratings"]
     else:
         return ["AA", "A"]
+
+
+def get_accepted_countries():
+    conf = load()
+    if "accepted_countries" in conf:
+        return conf["accepted_countries"]
+    else:
+        return []  # return empty list
+
+
+def get_min_balance():
+    conf = load()
+    if "min_balance" in conf:
+        return conf["min_balance"]
+    else:
+        return 5  # default
