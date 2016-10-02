@@ -18,8 +18,7 @@ As long as they don't change the API, this should work.
 
 
 # Installing
-
-Install the dependencies with
+Clone this repo and install the dependencies with
 ```
 pip install -r requirements.txt
 ```
