@@ -21,6 +21,9 @@ def parse_args():
     parser.add_argument('-b', metavar="AuctionId", help='Make a bid')
     parser.add_argument('--bids', action='store_true', help='Show your bids')
     parser.add_argument('--balance', action='store_true', help='Show balance')
+    parser.add_argument('--investments',
+                        action='store_true',
+                        help='Show investments')
     return parser, parser.parse_args()
 
 
@@ -34,6 +37,8 @@ def main():
         show_balance()
     elif args.bids:
         show_bids()
+    elif args.investments:
+        show_investments()
     else:
         parser.print_help()
 
@@ -62,7 +67,7 @@ def show_auctions():
                 if item["AuctionId"] == bid["AuctionId"]:
                     item["BidExists"] = True
             auctions.append(item)
-    print "{} auctions match our criteria".format(len(auctions))
+    print "{} auctions match your criteria".format(len(auctions))
     print_table(
         ["Rating", "UserName", "AppliedAmount", "IncomeTotal",
          "RemainingAmount", "City", "BidExists", "AuctionId"], auctions)
@@ -82,7 +87,7 @@ def print_table(header, rows):
                 cell_value = api.translate_status_code_to_string(row[key])
             else:
                 cell_value = (row[key])
-            # add cell value to cell 
+            # add cell value to cell
             row_content.append(cell_value)
 
         table.add_row(row_content)
@@ -100,14 +105,21 @@ def make_bid(auction_id):
 
 def show_balance():
     print_table(
-        ["Balance", "Reserved", "BidRequestAmount", "TotalAvailable"
-         ], api.get_balance())
+        ["Balance", "Reserved", "BidRequestAmount",
+         "TotalAvailable"], api.get_balance())
 
 
 def show_bids():
-    keys = ["AuctionId", "ActualBidAmount","RequestedBidAmount","StatusCode", "IsRequestBeingProcessed","BidRequestedDate","BidProcessedDate"]
+    keys = ["AuctionId", "ActualBidAmount", "RequestedBidAmount", "StatusCode",
+            "IsRequestBeingProcessed", "BidRequestedDate", "BidProcessedDate"]
     print_table(keys, api.get_bids())
 
+
+def show_investments():
+    investments = api.get_investments()
+    keys = ["Rating", "UserName", "Country", "PurchasePrice",
+            "PrincipalRepaid", "Interest"]
+    print_table(keys, investments)
 
 
 if __name__ == "__main__":
