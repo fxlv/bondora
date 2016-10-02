@@ -101,3 +101,8 @@ def get_auctions():
 def get_bids():
     url = "/api/v1/bids"
     return make_get_request(url)
+
+
+def get_investments():
+    url = "/api/v1/account/investments"
+    return make_get_request(url)
