@@ -19,6 +19,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="BondoraPy")
     parser.add_argument('-a', action='store_true', help='Show auctions')
     parser.add_argument('-b', metavar="AuctionId", help='Make a bid')
+    parser.add_argument('--bids', action='store_true', help='Show your bids')
     parser.add_argument('--balance', action='store_true', help='Show balance')
     return parser, parser.parse_args()
 
@@ -31,6 +32,8 @@ def main():
         make_bid(args.b)
     elif args.balance:
         show_balance()
+    elif args.bids:
+        show_bids()
     else:
         parser.print_help()
 
@@ -74,7 +77,14 @@ def print_table(header, rows):
     for row in rows:
         row_content = []
         for key in header:
-            row_content.append(row[key])
+            # some things can be made more human friendly
+            if key == "StatusCode":
+                cell_value = api.translate_status_code_to_string(row[key])
+            else:
+                cell_value = (row[key])
+            # add cell value to cell 
+            row_content.append(cell_value)
+
         table.add_row(row_content)
     print table
 
@@ -92,6 +102,12 @@ def show_balance():
     print_table(
         ["Balance", "Reserved", "BidRequestAmount", "TotalAvailable"
          ], api.get_balance())
+
+
+def show_bids():
+    keys = ["AuctionId", "ActualBidAmount","RequestedBidAmount","StatusCode", "IsRequestBeingProcessed","BidRequestedDate","BidProcessedDate"]
+    print_table(keys, api.get_bids())
+
 
 
 if __name__ == "__main__":
