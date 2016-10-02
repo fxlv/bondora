@@ -1,0 +1,14 @@
+---
+# go to https://api.bondora.com/Application to generate a token
+# then put it here
+token: token_goes_here
+# Next we have some settings on how risky
+# and how large you want your investments to be.
+accepted_loan_ratings:
+  - AA
+  - A
+  - B
+  - C
+  - D
+min_bid: 5
+max_bid: 10
