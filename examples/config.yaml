@@ -12,3 +12,8 @@ accepted_loan_ratings:
   - D
 min_bid: 5
 max_bid: 10
+accepted_countries:
+  - EE
+  - FI
+# minimum balance
+min_balance: 5
