@@ -11,8 +11,11 @@ import json
 bondora_base_url = "https://api.bondora.com"
 token = account.get_token()
 
+
 def translate_status_code_to_string(status_code):
-    """Translate bid status code from integer to a human understandable string"""
+    """
+    Translate bid status code from integer to a human understandable string
+    """
     known_status_codes = {0: "Pending",
                           1: "Open",
                           2: "Successful",
