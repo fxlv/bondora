@@ -19,6 +19,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="BondoraPy")
     parser.add_argument('-a', action='store_true', help='Show auctions')
     parser.add_argument('-b', metavar="AuctionId", help='Make a bid')
+    parser.add_argument('--auto', action='store_true', help='Auto invest mode')
     parser.add_argument('--bids', action='store_true', help='Show your bids')
     parser.add_argument('--balance', action='store_true', help='Show balance')
     parser.add_argument('--investments',
@@ -33,6 +34,8 @@ def main():
         show_auctions()
     elif args.b:
         make_bid(args.b)
+    elif args.auto:
+        auto()
     elif args.balance:
         show_balance()
     elif args.bids:
@@ -120,6 +123,101 @@ def show_investments():
     keys = ["Rating", "UserName", "Country", "PurchasePrice",
             "PrincipalRepaid", "Interest"]
     print_table(keys, investments)
+
+
+def auto():
+    """
+    Auto invest mode.
+    Go into a loop of:
+    - Retrieve auctions
+    - Check each auction:
+        * Have I already invested in it
+        * Is the risk rating acceptable
+        * Is income verified
+        * Is it already fully funded?
+        * do I have enough funds to make a bid
+    - if criteria match, make a bid
+        * bid size fixed to 5 eur (at this time)
+    """
+
+    # gather all the information needed first
+    my_balance = api.get_balance()
+    my_bids = api.get_bids()
+    available_auctions = api.get_auctions()
+
+    # must have at least 1 auctions to continue
+    if len(available_auctions) < 1:
+        print "No auctions available at this time."
+        sys.exit(0)
+    # now iterate over the available auctions
+    # and check for criteria match
+    for auction in available_auctions:
+        have_i_already_invested = False
+        print auction["AuctionId"]
+        # have I already invested in it
+        print "Have I already invested in it?",
+        for bid in my_bids:
+            if auction["AuctionId"] == bid["AuctionId"]:
+                # I have already invested, skip it
+                have_i_already_invested = True
+                break
+
+        if have_i_already_invested:
+            print "Yes. Skipping."
+            continue
+        else:
+            print "No."
+
+        # lets check if it's still available for investing 
+        # and has not been fully funded
+        print "Is it fully funded? ",
+        if auction["RemainingAmount"] < 0:
+            print "Yes. Skipping."
+            continue
+        else:
+            print "No."
+
+        # now, let's check if the country is in my list
+        print "Accepted country? ",
+        if not auction["Country"] in account.get_accepted_countries():
+            print "No. Skiping."
+            continue
+        else:
+            print "Yes"
+
+        # is the risk rating acceptable?
+        print "Acceptable risk rating? ",
+        if not auction["Rating"] in account.get_accepted_loan_ratings():
+            print "No. Skipping."
+            continue
+        else:
+            print "Yes."
+
+        # income verified?
+        # integer must be above 1
+        # 1 == not verified, 2 - 4 different types of verified ones
+        print "Income verified? "
+        if not auction["VerificationType"] < 2:
+            print "No. Skip."
+            continue
+        else:
+            print "Yes."
+
+        # do I have enough balance to invest?
+        print "Availabke balance?",
+        if not my_balance["TotalAvailable"] >= account.get_min_balance():
+            print "No. Skip."
+            continue
+        else:
+            print "Yes."
+
+        # Invest!
+        print "I shall invest in {} now!".format(auction["AuctionId"])
+        api.make_bid(auction["AuctionId"])
+        # decrement available balance to avoid querying api
+        my_balance["TotalAvailable"] -= 5
+
+        # rinse and repeat
 
 
 if __name__ == "__main__":
