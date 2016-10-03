@@ -77,3 +77,14 @@ You can check on your balance with:
 ```
 ./bondora.py --balance
 ```
+
+## Auto invest
+Automatically bid in available auctions if certain criteria are met.
+Namely, risk rating, country and income verification.
+
+Add it to cron and forget about manual actions.
+
+Run:
+```
+./bondora.py --auto
+```
