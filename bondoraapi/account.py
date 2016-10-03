@@ -17,7 +17,6 @@ def load():
     for path in search_paths:
         path = "{}/{}".format(path, config_file)
         if os.path.exists(path):
-            print "Found {}".format(path)
             with open(path) as config_file:
                 config = yaml.load(config_file)
                 if "token" in config:

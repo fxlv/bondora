@@ -151,11 +151,20 @@ def auto():
         sys.exit(0)
     # now iterate over the available auctions
     # and check for criteria match
+    
     for auction in available_auctions:
+        print "Auction: {}, ".format(auction["AuctionId"]),
+        # First of all, do I have enough balance to invest?
+        print "Availabke balance?",
+        if not my_balance["TotalAvailable"] >= account.get_min_balance():
+            print "No. Skip."
+            continue
+        else:
+            print "Yes.",
+        
+        # have I already invested in it?
         have_i_already_invested = False
-        print auction["AuctionId"]
-        # have I already invested in it
-        print "Have I already invested in it?",
+        print "Already invested in it?",
         for bid in my_bids:
             if auction["AuctionId"] == bid["AuctionId"]:
                 # I have already invested, skip it
@@ -166,16 +175,16 @@ def auto():
             print "Yes. Skipping."
             continue
         else:
-            print "No."
+            print "No.", 
 
         # lets check if it's still available for investing 
         # and has not been fully funded
-        print "Is it fully funded? ",
+        print "Fully funded? ",
         if auction["RemainingAmount"] < 0:
             print "Yes. Skipping."
             continue
         else:
-            print "No."
+            print "No.", 
 
         # now, let's check if the country is in my list
         print "Accepted country? ",
@@ -183,7 +192,7 @@ def auto():
             print "No. Skiping."
             continue
         else:
-            print "Yes"
+            print "Yes",
 
         # is the risk rating acceptable?
         print "Acceptable risk rating? ",
@@ -191,7 +200,7 @@ def auto():
             print "No. Skipping."
             continue
         else:
-            print "Yes."
+            print "Yes.", 
 
         # income verified?
         # integer must be above 1
@@ -201,15 +210,9 @@ def auto():
             print "No. Skip."
             continue
         else:
-            print "Yes."
+            print "Yes.", 
 
-        # do I have enough balance to invest?
-        print "Availabke balance?",
-        if not my_balance["TotalAvailable"] >= account.get_min_balance():
-            print "No. Skip."
-            continue
-        else:
-            print "Yes."
+        
 
         # Invest!
         print "I shall invest in {} now!".format(auction["AuctionId"])
