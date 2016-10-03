@@ -137,13 +137,15 @@ def auto():
         * Is it already fully funded?
         * do I have enough funds to make a bid
     - if criteria match, make a bid
-        * bid size fixed to 5 eur (at this time)
+        * bid size depends on risk rating
     """
 
     # gather all the information needed first
     my_balance = api.get_balance()
     my_bids = api.get_bids()
     available_auctions = api.get_auctions()
+
+
 
     # must have at least 1 auctions to continue
     if len(available_auctions) < 1:
@@ -201,7 +203,13 @@ def auto():
             continue
         else:
             print "Yes.", 
-
+        
+        # at this point we can set the bid size
+        if auction["Rating"] in ["AA", "A"]:
+            bid_size = account.get_max_bid()
+        else:
+            bid_size = account.get_min_bid()
+        print "Bid size: {} eur,".format(bid_size),
         # income verified?
         # integer must be above 1
         # 1 == not verified, 2 - 4 different types of verified ones
