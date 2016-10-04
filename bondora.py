@@ -224,7 +224,7 @@ def auto():
 
         # Invest!
         print "I shall invest in {} now!".format(auction["AuctionId"])
-        api.make_bid(auction["AuctionId"])
+        api.make_bid(auction["AuctionId"], bid_size)
         # decrement available balance to avoid querying api
         my_balance["TotalAvailable"] -= 5
 

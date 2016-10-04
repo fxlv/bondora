@@ -35,7 +35,7 @@ def make_post_request(request_url, content):
     return requests.post(full_url, headers=headers, data=json.dumps(content))
 
 
-def make_bid(auction_id, bid_amount=None):
+def make_bid(auction_id, bid_size=5):
     url = "/api/v1/bid"
     # Create a bid JSON payload
     bid = '''
@@ -44,7 +44,7 @@ def make_bid(auction_id, bid_amount=None):
             [
                 {{
                     "AuctionId": "{auction_id}",
-                    "Amount": 5.0,
+                    "Amount": {bid_size},
                     "MinAmount": 5.0
                 }}
             ]
@@ -52,7 +52,7 @@ def make_bid(auction_id, bid_amount=None):
 
     '''
 
-    bid = json.loads(bid.format(auction_id=auction_id))
+    bid = json.loads(bid.format(auction_id=auction_id, bid_size=float(bid_size)))
     response = make_post_request(url, bid)
     if response.status_code == 202:
         response_json = response.json()
