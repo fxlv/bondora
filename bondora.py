@@ -115,7 +115,9 @@ def show_balance():
 def show_bids():
     keys = ["AuctionId", "ActualBidAmount", "RequestedBidAmount", "StatusCode",
             "IsRequestBeingProcessed", "BidRequestedDate", "BidProcessedDate"]
-    print_table(keys, api.get_bids())
+    # sort bids by 'BidRequestedDate'
+    sorted_bids = sorted(api.get_bids(), key=lambda item: item['BidRequestedDate'])
+    print_table(keys, sorted_bids[-10:])
 
 
 def show_investments():
@@ -157,7 +159,7 @@ def auto():
     for auction in available_auctions:
         print "Auction: {}, ".format(auction["AuctionId"]),
         # First of all, do I have enough balance to invest?
-        print "Availabke balance?",
+        print "Available balance?",
         if not my_balance["TotalAvailable"] >= account.get_min_balance():
             print "No. Skip."
             continue
