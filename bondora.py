@@ -115,15 +115,13 @@ def show_balance():
 def show_bids():
     keys = ["AuctionId", "ActualBidAmount", "RequestedBidAmount", "StatusCode",
             "IsRequestBeingProcessed", "BidRequestedDate", "BidProcessedDate"]
-    # sort bids by 'BidRequestedDate'
-    sorted_bids = sorted(api.get_bids(), key=lambda item: item['BidRequestedDate'])
-    print_table(keys, sorted_bids[-10:])
+    print_table(keys, api.get_bids())
 
 
 def show_investments():
     investments = api.get_investments()
     keys = ["Rating", "UserName", "Country", "PurchasePrice",
-            "PrincipalRepaid", "Interest"]
+            "PrincipalRepaid", "Interest", "PurchaseDate"]
     print_table(keys, investments)
 
 

@@ -102,11 +102,17 @@ def get_auction(auction_id):
     return make_get_request(url)
 
 
-def get_bids():
+def get_bids(count=10):
+    """ Return a list of bids, sorted by bid date"""
     url = "/api/v1/bids"
-    return make_get_request(url)
+    bids = make_get_request(url)
+    # sort bids by 'BidRequestedDate'
+    sorted_bids = sorted(bids, key=lambda item: item['BidRequestedDate'])
+    return sorted_bids[-count:]
 
 
-def get_investments():
+def get_investments(count=10):
     url = "/api/v1/account/investments"
-    return make_get_request(url)
+    investments = make_get_request(url)
+    sorted_investments = sorted(investments, key=lambda item: item['PurchaseDate'])
+    return sorted_investments[-count:]
