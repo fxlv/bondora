@@ -145,15 +145,13 @@ def auto():
     my_bids = api.get_bids()
     available_auctions = api.get_auctions()
 
-
-
     # must have at least 1 auctions to continue
     if len(available_auctions) < 1:
         print "No auctions available at this time."
         sys.exit(0)
     # now iterate over the available auctions
     # and check for criteria match
-    
+
     for auction in available_auctions:
         print "Auction: {}, ".format(auction["AuctionId"]),
         # First of all, do I have enough balance to invest?
@@ -163,7 +161,7 @@ def auto():
             continue
         else:
             print "Yes.",
-        
+
         # have I already invested in it?
         have_i_already_invested = False
         print "Already invested in it?",
@@ -177,7 +175,7 @@ def auto():
             print "Yes. Skipping."
             continue
         else:
-            print "No.", 
+            print "No.",
 
         # lets check if it's still available for investing 
         # and has not been fully funded
@@ -186,7 +184,7 @@ def auto():
             print "Yes. Skipping."
             continue
         else:
-            print "No.", 
+            print "No.",
 
         # now, let's check if the country is in my list
         print "Accepted country? ",
@@ -202,8 +200,8 @@ def auto():
             print "No. Skipping."
             continue
         else:
-            print "Yes.", 
-        
+            print "Yes.",
+
         # at this point we can set the bid size
         if auction["Rating"] in ["AA", "A"]:
             bid_size = account.get_max_bid()
@@ -218,9 +216,7 @@ def auto():
             print "No. Skip."
             continue
         else:
-            print "Yes.", 
-
-        
+            print "Yes.",
 
         # Invest!
         print "I shall invest in {} now!".format(auction["AuctionId"])

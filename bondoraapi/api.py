@@ -52,7 +52,8 @@ def make_bid(auction_id, bid_size=5):
 
     '''
 
-    bid = json.loads(bid.format(auction_id=auction_id, bid_size=float(bid_size)))
+    bid = json.loads(bid.format(auction_id=auction_id,
+                                bid_size=float(bid_size)))
     response = make_post_request(url, bid)
     if response.status_code == 202:
         response_json = response.json()
@@ -97,6 +98,7 @@ def get_auctions():
     url = "/api/v1/auctions"
     return make_get_request(url)
 
+
 def get_auction(auction_id):
     url = "/api/v1/auction/{auction_id}".format(auction_id=auction_id)
     return make_get_request(url)
@@ -114,5 +116,6 @@ def get_bids(count=10):
 def get_investments(count=10):
     url = "/api/v1/account/investments"
     investments = make_get_request(url)
-    sorted_investments = sorted(investments, key=lambda item: item['PurchaseDate'])
+    sorted_investments = sorted(investments,
+                                key=lambda item: item['PurchaseDate'])
     return sorted_investments[-count:]
