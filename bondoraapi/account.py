@@ -51,8 +51,10 @@ def get_min_balance():
     else:
         return 5  # default
 
+
 def get_max_bid():
     return load()["max_bid"]
+
 
 def get_min_bid():
     return load()["min_bid"]
