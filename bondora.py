@@ -5,6 +5,7 @@
 #   - retrieve auctions
 #   - make bids
 #   - get account balance
+#   - auto invest
 #
 # Safety not guaranteed
 # Kaspars Mickevics <kaspars@fx.lv>

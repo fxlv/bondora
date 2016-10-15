@@ -31,6 +31,12 @@ Example configuration file is provided in the `examlpes` directory.
 For starters, you only need to generate a token and put it in the config file.
 Look at the example for more details.
 
+## Older python
+If your python version is < 2.7.9, you'll have to install the following packages to avoid SSL Warnings:
+```
+pip install pyopenssl ndg-httpsclient pyasn1
+```
+
 # Using
 The main script `bondora.py` takes several arguments.
 Run it without any to get help on usage.
