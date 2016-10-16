@@ -9,7 +9,8 @@ import json
 #
 
 bondora_base_url = "https://api.bondora.com"
-token = account.get_token()
+a = account.Account()
+token = a.token
 
 
 def translate_status_code_to_string(status_code):
