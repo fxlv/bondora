@@ -13,10 +13,18 @@
 import sys
 import argparse
 from prettytable import PrettyTable
+import storage
+import logging
+
+# logging must be initialized before anything else
+logging.basicConfig(filename="bondora.log", level=logging.DEBUG)
+
 from bondoraapi import account, api
 
 # initialize Bondora account
-a = account.Account()
+A = account.Account()
+S = storage.Storage(A)
+
 
 
 def parse_args():
@@ -49,7 +57,6 @@ def main():
     else:
         parser.print_help()
 
-
 def auction_exists(auction_id):
     """Return True if such auction exists"""
     for auction in api.get_auctions():
@@ -66,7 +73,7 @@ def show_auctions():
     auctions = []
     my_bids = api.get_bids()
     for item in payload:
-        if item["Rating"] in a.accepted_loan_ratings:
+        if item["Rating"] in A.accepted_loan_ratings:
             # cross check each auction against my bids
             item["BidExists"] = False  # assume bid does not exists by default
             for bid in my_bids:
@@ -159,7 +166,7 @@ def auto():
         print "Auction: {}, ".format(auction["AuctionId"]),
         # First of all, do I have enough balance to invest?
         print "Available balance?",
-        if not my_balance["TotalAvailable"] >= a.min_balance:
+        if not my_balance["TotalAvailable"] >= A.min_balance:
             print "No. Skip."
             continue
         else:
@@ -191,7 +198,7 @@ def auto():
 
         # now, let's check if the country is in my list
         print "Accepted country? ",
-        if not auction["Country"] in a.accepted_countries:
+        if not auction["Country"] in A.accepted_countries:
             print "No. Skiping."
             continue
         else:
@@ -199,7 +206,7 @@ def auto():
 
         # is the risk rating acceptable?
         print "Acceptable risk rating? ",
-        if not auction["Rating"] in a.accepted_loan_ratings:
+        if not auction["Rating"] in A.accepted_loan_ratings:
             print "No. Skipping."
             continue
         else:
@@ -207,9 +214,9 @@ def auto():
 
         # at this point we can set the bid size
         if auction["Rating"] in ["AA", "A"]:
-            bid_size = a.max_bid
+            bid_size = A.max_bid
         else:
-            bid_size = a.min_bid
+            bid_size = A.min_bid
         print "Bid size: {} eur,".format(bid_size),
         # income verified?
         # integer must be above 1
