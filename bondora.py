@@ -20,11 +20,13 @@ import logging
 logging.basicConfig(filename="bondora.log", level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s')
 
-from bondoraapi import account, api
+import bondoraapi.api
+import bondoraapi.account
 
 # initialize Bondora account
-A = account.Account()
+A = bondoraapi.account.Account()
 S = storage.Storage(A)
+API = bondoraapi.api.Api(S)
 
 
 
@@ -60,19 +62,19 @@ def main():
 
 def auction_exists(auction_id):
     """Return True if such auction exists"""
-    for auction in api.get_auctions():
+    for auction in API.get_auctions():
         if auction["AuctionId"] == auction_id:
             return True
     return False
 
 
 def show_auctions():
-    payload = api.get_auctions()
+    payload = API.get_auctions()
 
     print "There are currently {} auctions available".format(len(payload))
     # now filter out the auctions that do not match our risk rating criteria
     auctions = []
-    my_bids = api.get_bids()
+    my_bids = API.get_bids()
     for item in payload:
         if item["Rating"] in A.accepted_loan_ratings:
             # cross check each auction against my bids
@@ -98,7 +100,7 @@ def print_table(header, rows):
         for key in header:
             # some things can be made more human friendly
             if key == "StatusCode":
-                cell_value = api.translate_status_code_to_string(row[key])
+                cell_value = API.translate_status_code_to_string(row[key])
             else:
                 cell_value = (row[key])
             # add cell value to cell
@@ -110,7 +112,7 @@ def print_table(header, rows):
 
 def make_bid(auction_id):
     if auction_exists(auction_id):
-        api.make_bid(auction_id)
+        API.make_bid(auction_id)
     else:
         print "Such auction does not seem to exist"
         print "AuctionId: {}".format(auction_id)
@@ -121,19 +123,19 @@ def show_balance():
     logging.debug("Show balance")
     print_table(
         ["Balance", "Reserved", "BidRequestAmount",
-         "TotalAvailable"], api.get_balance())
+         "TotalAvailable"], API.get_balance())
 
 
 def show_bids():
     logging.debug("Show bids")
     keys = ["AuctionId", "ActualBidAmount", "RequestedBidAmount", "StatusCode",
             "IsRequestBeingProcessed", "BidRequestedDate", "BidProcessedDate"]
-    print_table(keys, api.get_bids())
+    print_table(keys, API.get_bids())
 
 
 def show_investments():
     logging.debug("Show investments")
-    investments = api.get_investments()
+    investments = API.get_investments()
     keys = ["Rating", "UserName", "Country", "PurchasePrice",
             "PrincipalRepaid", "Interest", "PurchaseDate"]
     print_table(keys, investments)
@@ -155,9 +157,9 @@ def auto():
     """
     logging.debug("Running auto invest")
     # gather all the information needed first
-    my_balance = api.get_balance()
-    my_bids = api.get_bids()
-    available_auctions = api.get_auctions()
+    my_balance = API.get_balance()
+    my_bids = API.get_bids()
+    available_auctions = API.get_auctions()
 
     # must have at least 1 auctions to continue
     if len(available_auctions) < 1:
@@ -234,7 +236,7 @@ def auto():
 
         # Invest!
         print "I shall invest in {} now!".format(auction["AuctionId"])
-        api.make_bid(auction["AuctionId"], bid_size)
+        API.make_bid(auction["AuctionId"], bid_size)
         # decrement available balance to avoid querying api
         my_balance["TotalAvailable"] -= 5
 
