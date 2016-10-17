@@ -17,7 +17,8 @@ import storage
 import logging
 
 # logging must be initialized before anything else
-logging.basicConfig(filename="bondora.log", level=logging.DEBUG)
+logging.basicConfig(filename="bondora.log", level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s')
 
 from bondoraapi import account, api
 
