@@ -118,18 +118,21 @@ def make_bid(auction_id):
 
 
 def show_balance():
+    logging.debug("Show balance")
     print_table(
         ["Balance", "Reserved", "BidRequestAmount",
          "TotalAvailable"], api.get_balance())
 
 
 def show_bids():
+    logging.debug("Show bids")
     keys = ["AuctionId", "ActualBidAmount", "RequestedBidAmount", "StatusCode",
             "IsRequestBeingProcessed", "BidRequestedDate", "BidProcessedDate"]
     print_table(keys, api.get_bids())
 
 
 def show_investments():
+    logging.debug("Show investments")
     investments = api.get_investments()
     keys = ["Rating", "UserName", "Country", "PurchasePrice",
             "PrincipalRepaid", "Interest", "PurchaseDate"]
@@ -150,7 +153,7 @@ def auto():
     - if criteria match, make a bid
         * bid size depends on risk rating
     """
-
+    logging.debug("Running auto invest")
     # gather all the information needed first
     my_balance = api.get_balance()
     my_bids = api.get_bids()

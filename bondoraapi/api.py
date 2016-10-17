@@ -39,6 +39,8 @@ def make_post_request(request_url, content):
 
 def make_bid(auction_id, bid_size=5):
     url = "/api/v1/bid"
+    logging.debug("Making bid for auction: {}, bid size: {}".format(
+        auction_id, bid_size))
     # Create a bid JSON payload
     bid = '''
     {{
