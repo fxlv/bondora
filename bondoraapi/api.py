@@ -75,7 +75,13 @@ def make_get_request(request_url):
     full_url = "{}/{}".format(bondora_base_url, request_url)
     headers = {"Authorization": "Bearer {}".format(token)}
 
-    response = requests.get(full_url, headers=headers)
+    try:
+        response = requests.get(full_url, headers=headers)
+    except Exception, e:
+        logging.critical("Exception, while making a GET request.")
+        logging.critical(e)
+        print "Request failed. Check logs for details."
+        sys.exit(1)
 
     # Handle bad responses. Sort of.
     if not response.ok:
