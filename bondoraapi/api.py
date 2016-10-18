@@ -15,7 +15,7 @@ import datetime
 class Api(object):
 
     def __init__(self, storage):
-        self.bondora_base_url = "https://api.bondora.coms"
+        self.bondora_base_url = "https://api.bondora.com"
         self.a = account.Account()
         self.token = self.a.token
         self.storage = storage
