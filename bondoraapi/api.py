@@ -13,7 +13,6 @@ import datetime
 
 
 class Api(object):
-
     def __init__(self, storage):
         self.bondora_base_url = "https://api.bondora.com"
         self.a = account.Account()
@@ -35,13 +34,13 @@ class Api(object):
         else:
             return "Unknown code: {}".format(status_code)
 
-
     def make_post_request(self, request_url, content):
         full_url = "{}/{}".format(self.bondora_base_url, request_url)
         headers = {"Authorization": "Bearer {}".format(self.token),
                    "Content-Type": "application/json"}
-        return requests.post(full_url, headers=headers, data=json.dumps(content))
-
+        return requests.post(full_url,
+                             headers=headers,
+                             data=json.dumps(content))
 
     def make_bid(self, auction_id, bid_size=5):
         url = "/api/v1/bid"
@@ -76,7 +75,6 @@ class Api(object):
             print "Unexpected status code {}".format(response.status_code)
         return False
 
-
     def make_get_request(self, request_url):
         full_url = "{}/{}".format(self.bondora_base_url, request_url)
         headers = {"Authorization": "Bearer {}".format(self.token)}
@@ -86,7 +84,7 @@ class Api(object):
         except Exception, e:
             logging.critical("Exception, while making a GET request.")
             logging.critical(e)
-            self.storage.save("last_failure",datetime.datetime.now())
+            self.storage.save("last_failure", datetime.datetime.now())
             print "Request failed. Check logs for details."
             sys.exit(1)
 
@@ -105,21 +103,17 @@ class Api(object):
 
         return response_json['Payload']
 
-
     def get_balance(self):
         url = "/api/v1/account/balance"
         return self.make_get_request(url)
-
 
     def get_auctions(self):
         url = "/api/v1/auctions"
         return self.make_get_request(url)
 
-
     def get_auction(self, auction_id):
         url = "/api/v1/auction/{auction_id}".format(auction_id=auction_id)
         return self.make_get_request(url)
-
 
     def get_bids(self, count=10):
         """ Return a list of bids, sorted by bid date"""
@@ -128,7 +122,6 @@ class Api(object):
         # sort bids by 'BidRequestedDate'
         sorted_bids = sorted(bids, key=lambda item: item['BidRequestedDate'])
         return sorted_bids[-count:]
-
 
     def get_investments(self, count=10):
         url = "/api/v1/account/investments"

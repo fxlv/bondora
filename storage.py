@@ -13,6 +13,7 @@ import os
 import datetime
 import logging
 
+
 class Storage(object):
     """ Store operational data."""
 
@@ -23,8 +24,8 @@ class Storage(object):
             with open(self.path, "rb") as storage_file:
                 self.storage = pickle.load(storage_file)
                 logging.debug("Storage file loaded")
-                logging.debug("Last save was: {}".format(
-                    self.storage["last_save"]))
+                logging.debug("Last save was: {}".format(self.storage[
+                    "last_save"]))
         else:
             logging.debug(
                 "storage file does not exist yet. Returning empty dict")
@@ -36,6 +37,7 @@ class Storage(object):
             return self.storage[key]
         else:
             return None
+
     def save(self, key, value):
         logging.debug("Setting key '{}' = '{}'".format(key, value))
         self.storage[key] = value

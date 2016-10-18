@@ -17,7 +17,8 @@ import storage
 import logging
 
 # logging must be initialized before anything else
-logging.basicConfig(filename="bondora.log", level=logging.DEBUG,
+logging.basicConfig(filename="bondora.log",
+                    level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s')
 
 import bondoraapi.api
@@ -27,7 +28,6 @@ import bondoraapi.account
 A = bondoraapi.account.Account()
 S = storage.Storage(A)
 API = bondoraapi.api.Api(S)
-
 
 
 def parse_args():
@@ -59,6 +59,7 @@ def main():
         show_investments()
     else:
         parser.print_help()
+
 
 def auction_exists(auction_id):
     """Return True if such auction exists"""
