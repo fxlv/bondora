@@ -31,6 +31,7 @@ API = bondoraapi.api.Api(S)
 
 
 def parse_args():
+    """Handle the command line arguments."""
     parser = argparse.ArgumentParser(description="BondoraPy")
     parser.add_argument('-a', action='store_true', help='Show auctions')
     parser.add_argument('-b', metavar="AuctionId", help='Make a bid')
@@ -44,6 +45,7 @@ def parse_args():
 
 
 def main():
+    """Call appropriate function based on CLI arguments."""
     parser, args = parse_args()
     if args.a:
         show_auctions()
@@ -62,7 +64,7 @@ def main():
 
 
 def auction_exists(auction_id):
-    """Return True if such auction exists"""
+    """Return True if such auction exists."""
     for auction in API.get_auctions():
         if auction["AuctionId"] == auction_id:
             return True
@@ -70,6 +72,7 @@ def auction_exists(auction_id):
 
 
 def show_auctions():
+    """Print a table of current auctions that match configured criteria."""
     payload = API.get_auctions()
 
     print "There are currently {} auctions available".format(len(payload))
@@ -91,7 +94,7 @@ def show_auctions():
 
 
 def print_table(header, rows):
-    """Print a pretty table from a set of keys and data"""
+    """Print a pretty table from a set of keys and data."""
     table = PrettyTable()
     table.field_names = header
     if type(rows) is not list:
@@ -112,6 +115,7 @@ def print_table(header, rows):
 
 
 def make_bid(auction_id):
+    """Submit a bid to API."""
     if auction_exists(auction_id):
         API.make_bid(auction_id)
     else:
@@ -121,6 +125,7 @@ def make_bid(auction_id):
 
 
 def show_balance():
+    """Print a table that shows account balance."""
     logging.debug("Show balance")
     print_table(
         ["Balance", "Reserved", "BidRequestAmount",
@@ -128,6 +133,7 @@ def show_balance():
 
 
 def show_bids():
+    """Print a table of current bids."""
     logging.debug("Show bids")
     keys = ["AuctionId", "ActualBidAmount", "RequestedBidAmount", "StatusCode",
             "IsRequestBeingProcessed", "BidRequestedDate", "BidProcessedDate"]
@@ -135,6 +141,7 @@ def show_bids():
 
 
 def show_investments():
+    """Print a table of current investments."""
     logging.debug("Show investments")
     investments = API.get_investments()
     keys = ["Rating", "UserName", "Country", "PurchasePrice",
@@ -143,8 +150,8 @@ def show_investments():
 
 
 def auto():
-    """
-    Auto invest mode.
+    """Auto invest mode.
+
     Go into a loop of:
     - Retrieve auctions
     - Check each auction:

@@ -1,5 +1,4 @@
-"""
-Import Bondora account settings
+"""Bondora account settings.
 
 Look for the settings file in:
     - current directory
@@ -14,11 +13,17 @@ import logging
 class Account(object):
     """
     Bondora account settings.
+
     Finds and reads the config file and stores the configuration
     settings as object attributes.
     """
 
     def __init__(self):
+        """Initialize account.
+
+        If some of the optional settings are not defined
+        fall back to using defaults.
+        """
         logging.debug("Account object is being created")
         self.config = None
         self.config_path = None
@@ -47,7 +52,7 @@ class Account(object):
             self.min_bid = 5
 
     def load(self):
-        "Find and load the configuration file"
+        """Find and load the configuration file."""
         config_file = "config.yaml"
         search_paths = [os.getcwd(), "{}/.bondora".format(os.environ["HOME"])]
 

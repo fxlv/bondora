@@ -1,12 +1,11 @@
-# 
-# Python API for talking to Bondora.com
-# 
-# Bondora API Docs:
-# https://api.bondora.com/Intro
-#
+"""Python API for talking to Bondora.com.
+
+Bondora API Docs:
+https://api.bondora.com/Intro
+"""
 import sys
 import requests
-import account
+import bondoraapi.account
 import json
 import logging
 import datetime
@@ -15,14 +14,12 @@ import datetime
 class Api(object):
     def __init__(self, storage):
         self.bondora_base_url = "https://api.bondora.com"
-        self.a = account.Account()
+        self.a = bondoraapi.account.Account()
         self.token = self.a.token
         self.storage = storage
 
     def translate_status_code_to_string(self, status_code):
-        """
-        Translate bid status code from integer to a human understandable string
-        """
+        """Convert status code from integer to a human readable string."""
         known_status_codes = {0: "Pending",
                               1: "Open",
                               2: "Successful",
