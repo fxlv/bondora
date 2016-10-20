@@ -54,7 +54,11 @@ class Account(object):
     def load(self):
         """Find and load the configuration file."""
         config_file = "config.yaml"
-        search_paths = [os.getcwd(), "{}/.bondora".format(os.environ["HOME"])]
+        if "HOME" in os.environ:
+            search_paths = [os.getcwd(), "{}/.bondora".format(os.environ["HOME"])]
+        else:
+            logging.debug("You don't appear to have 'HOME' environment variable set.'")
+            search_paths = [os.getcwd()]
         logging.debug("Search paths: %s", search_paths)
 
         for path in search_paths:
