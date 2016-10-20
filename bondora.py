@@ -167,10 +167,12 @@ def scheduler():
     while True:
         date = datetime.datetime.now()
         hour = date.hour
-        if not S.has_key("this_hour"):
+        if S.this_hour is None:
             logging.debug("First time you use scheduler?")
             logging.debug("Saving the 'this_hour' variable.")
             S.save("this_hour", 0)
+            S.save("last_sched_run", date)
+
         # working hours, between 08:00 and 18:00
         if hour > 7 and hour < 18:
             # sleep time: random period between 1 - 6 minutes
