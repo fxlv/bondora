@@ -15,6 +15,9 @@ import argparse
 from prettytable import PrettyTable
 import storage
 import logging
+import time
+import random
+import datetime
 
 # logging must be initialized before anything else
 logging.basicConfig(filename="bondora.log",
@@ -29,6 +32,8 @@ A = bondoraapi.account.Account()
 S = storage.Storage(A)
 API = bondoraapi.api.Api(S)
 
+max_runs_per_hour = 15
+
 
 def parse_args():
     """Handle the command line arguments."""
@@ -36,6 +41,7 @@ def parse_args():
     parser.add_argument('-a', action='store_true', help='Show auctions')
     parser.add_argument('-b', metavar="AuctionId", help='Make a bid')
     parser.add_argument('--auto', action='store_true', help='Auto invest mode')
+    parser.add_argument('--sched', action='store_true', help='Scheduler mode')
     parser.add_argument('--bids', action='store_true', help='Show your bids')
     parser.add_argument('--balance', action='store_true', help='Show balance')
     parser.add_argument('--investments',
@@ -53,6 +59,8 @@ def main():
         make_bid(args.b)
     elif args.auto:
         auto()
+    elif args.sched:
+        scheduler()
     elif args.balance:
         show_balance()
     elif args.bids:
@@ -149,6 +157,43 @@ def show_investments():
     print_table(keys, investments)
 
 
+def scheduler():
+    """Scheduler mode.
+
+    Glorified 'while True' loop basically.
+    Try to be more active between 08:00 and 17:00.
+    Max 10 runs per hour.
+    """
+    while True:
+        date = datetime.datetime.now()
+        hour = date.hour
+        # working hours, between 08:00 and 18:00
+        if hour > 7 and hour < 18:
+            # sleep time: random period between 1 - 6 minutes
+            sleep_time = random.randrange(60, 360)
+        else:
+            # sleep time: random period between 30 - 60 minutes
+            sleep_time = random.randrange(1800, 3600)
+        logging.debug("This hour: %s", S.this_hour)
+
+        if S.last_sched_run.hour != hour:
+            logging.debug("New hour. Resetting hourly run counter.")
+            S.save("this_hour", 0)
+        else:
+            # this is not the first time we run this hour,
+            # check that max_runs_per hour is not reached
+            if int(S.this_hour) < max_runs_per_hour:
+                auto()
+                logging.debug("Incrementing hourly run counter.")
+                S.save("this_hour", S.this_hour + 1)
+            else:
+                logging.debug("Max runs per hour reached")
+        S.save("last_sched_run", date)
+
+        logging.debug("Sleeping for %s seconds", sleep_time)
+        time.sleep(sleep_time)
+
+
 def auto():
     """Auto invest mode.
 
@@ -172,7 +217,7 @@ def auto():
     # must have at least 1 auctions to continue
     if len(available_auctions) < 1:
         print "No auctions available at this time."
-        sys.exit(0)
+        return False
     # now iterate over the available auctions
     # and check for criteria match
 
@@ -252,4 +297,9 @@ def auto():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        logging.info("Ctrl+c pressed. Exiting.")
+        print "Exiting..."
+        sys.exit(0)
