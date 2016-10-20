@@ -55,6 +55,7 @@ class Account(object):
         """Find and load the configuration file."""
         config_file = "config.yaml"
         search_paths = [os.getcwd(), "{}/.bondora".format(os.environ["HOME"])]
+        logging.debug("Search paths: %s", search_paths)
 
         for path in search_paths:
             file_path = "{}/{}".format(path, config_file)
