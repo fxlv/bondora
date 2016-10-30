@@ -174,13 +174,13 @@ def scheduler():
             S.save("last_sched_run", date)
 
         # working hours, between 07:00 and 10:00
-        if hour >= 7 and hour < 10:
-            # sleep time: random period between 1 and 5 minutes
-            sleep_time = random.randrange(60, 300)
+        if hour >= 5 and hour < 10:
+            # sleep time: random period between 1 and 3 minutes
+            sleep_time = random.randrange(60, 180)
         # working hours, between 10:00 and 10:00
         elif hour >= 10 and hour < 18:
-            # sleep time: random period between 1 - 7 minutes
-            sleep_time = random.randrange(60, 420)
+            # sleep time: random period between 1 - 5 minutes
+            sleep_time = random.randrange(60, 300)
         else:
             # sleep time: random period between 30 - 60 minutes
             sleep_time = random.randrange(1800, 3600)

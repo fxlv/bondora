@@ -9,6 +9,7 @@ import bondoraapi.account
 import json
 import logging
 import datetime
+import time
 
 
 class Api(object):
@@ -75,21 +76,24 @@ class Api(object):
     def make_get_request(self, request_url):
         full_url = "{}/{}".format(self.bondora_base_url, request_url)
         headers = {"Authorization": "Bearer {}".format(self.token)}
+        while True:
+            try:
+                response = requests.get(full_url, headers=headers)
+            except Exception, e:
+                logging.critical("Exception, while making a GET request.")
+                logging.critical(e)
+                self.storage.save("last_failure", datetime.datetime.now())
+                print "Request failed. Check logs for details."
+                sys.exit(1)
 
-        try:
-            response = requests.get(full_url, headers=headers)
-        except Exception, e:
-            logging.critical("Exception, while making a GET request.")
-            logging.critical(e)
-            self.storage.save("last_failure", datetime.datetime.now())
-            print "Request failed. Check logs for details."
-            sys.exit(1)
-
-        # Handle bad responses. Sort of.
-        if not response.ok:
-            print "Bad response"
-            print response.json()
-            sys.exit(1)
+            # Handle bad responses. Sort of.
+            if not response.ok:
+                logging.warning("Bad response")
+                logging.warning(response.json())
+                time.sleep(1)
+            else:
+                logging.debug("Request to %s was successfull", request_url)
+                break  # exit the loop after success response
 
         # At this point we have OK response
         response_json = response.json()
