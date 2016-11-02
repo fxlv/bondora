@@ -32,7 +32,7 @@ A = bondoraapi.account.Account()
 S = storage.Storage(A)
 API = bondoraapi.api.Api(S)
 
-max_runs_per_hour = 15
+max_runs_per_hour = 25
 
 
 def parse_args():
@@ -175,12 +175,12 @@ def scheduler():
 
         # working hours, between 07:00 and 10:00
         if hour >= 5 and hour < 10:
-            # sleep time: random period between 1 and 3 minutes
-            sleep_time = random.randrange(60, 180)
-        # working hours, between 10:00 and 10:00
+            # sleep time: random period between 45 sec and 1 min
+            sleep_time = random.randrange(45, 60)
+        # working hours, between 10:00 and 18:00
         elif hour >= 10 and hour < 18:
-            # sleep time: random period between 1 - 5 minutes
-            sleep_time = random.randrange(60, 300)
+            # sleep time: random period between 1 - 3 minutes
+            sleep_time = random.randrange(60, 180)
         else:
             # sleep time: random period between 30 - 60 minutes
             sleep_time = random.randrange(1800, 3600)
