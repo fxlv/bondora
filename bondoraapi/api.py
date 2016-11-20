@@ -80,11 +80,15 @@ class Api(object):
             try:
                 response = requests.get(full_url, headers=headers)
             except Exception, e:
-                logging.critical("Exception, while making a GET request.")
-                logging.critical(e)
                 self.storage.save("last_failure", datetime.datetime.now())
-                print "Request failed. Check logs for details."
-                sys.exit(1)
+                if "Connection reset by peer" in e:
+                    logging.warning("Connection reset by peer. Will sleep and retry")
+                    time.sleep(10)
+                else:
+                    logging.critical("Exception, while making a GET request.")
+                    logging.critical(e)
+                    print "Request failed. Check logs for details."
+                    sys.exit(1)
 
             # Handle bad responses. Sort of.
             if not response.ok:
